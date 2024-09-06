@@ -1,0 +1,30 @@
+section {
+    display: flex;
+}
+
+section div {
+    flex: 1px;
+    padding: 8px;
+}
+
+.note {
+    padding: 10px;
+    background-color: aqua;
+    border-radius: 4px;
+    margin: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 24px;
+}
+
+.form-group textarea {
+    height: 250px;
+    padding: 10px;
+}
