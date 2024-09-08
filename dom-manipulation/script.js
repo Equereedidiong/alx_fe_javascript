@@ -14,7 +14,7 @@ showRandomQuote = () => {
  // Math.floor() rounds down the result to the nearest whole number. Since array indices must be integers, this ensures we get a valid index between 0 and quotes.length - 1.
  // randomIndex is the result and represents a random index in the quotes array.
   const randomQuote = quoteArray[ranArray];
-  displayQuote.appendChild(Paragraph);
+  Paragraph.innerHTML = displayQuote.appendChild(Paragraph);
   Paragraph.classList.add('Par');
   displayQuote.innerText = `"${randomQuote.text}" - Category: ${randomQuote.category}`;
 
