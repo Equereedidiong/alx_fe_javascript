@@ -32,6 +32,7 @@ BtnSelector.addEventListener ('click', (Submit) => {
     //To store the items locally
 
     localStorage.setItem('notes', JSON.stringify(allNotes));
+    console.log(allNotes);
     // This would make the values of notes in string format
     note.value = "";
 });
@@ -43,7 +44,7 @@ const renderNote = () => {
     const gottenData = JSON.parse(notes1);
     // allNotes.push(...gottenData)
     // console.log(gottenData);
-    allNotes.push(...gottenData); // (...gottenData is a spread Operator, that helps )
+    allNotes.push(...gottenData); // (...gottenData is a spread Operator, that helps us log in many values so we do not get array nested inside array )
 
     gottenData.map((note) => {
     
