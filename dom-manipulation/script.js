@@ -1,105 +1,35 @@
-// Test running my DOM Manipulation
+// 0. Building a Dynamic Content Generator with Advanced DOM Manipulation
 
-// 1. Selecting the Button
-const test = document.querySelector("#Btn");
+//
+let quoteArray = [{text: 'Just do it', category: 'Motivation'}, {text:'make it make sense', category:'Sarcasm'}];
 
-console.log(test);
+const displayQuote = document.querySelector('#quoteDisplay');
+let Paragraph = document.createElement('p');
+const Btn = document.getElementById('newQuote');
 
-//Adding Event listeners
+showRandomQuote = () => {
+  const ranArray = Math.floor(Math.random() * quoteArray.length);
+  // Math.random() generates a random number between 0 (inclusive) and 1 (exclusive).
+  // Math.random() * quotes.length multiplies the random number by the total number of quotes (length of the quotes array). This ensures the random number corresponds to a valid index in the array.
+ // Math.floor() rounds down the result to the nearest whole number. Since array indices must be integers, this ensures we get a valid index between 0 and quotes.length - 1.
+ // randomIndex is the result and represents a random index in the quotes array.
+  const randomQuote = quoteArray[ranArray];
+  displayQuote.appendChild(Paragraph);
+  Paragraph.classList.add('Par');
+  displayQuote.innerText = `"${randomQuote.text}" - Category: ${randomQuote.category}`;
 
-Btn.addEventListener ('click', () => {
-    console.log("You clicked me");     
-    
+  // Paragraph.innerText = console.log(randomQuote);
+  // const paragraph = document.createElement('p');
+  // console.log(ranArray);
+};
 
-    const Par = document.createElement("p");
-    Par.textContent = "This was added from the DOM";
+createAddQuoteForm = () => {
 
 
-    D.appendChild(Par);
+};
 
-        
+Btn.addEventListener('click', () => {
+  showRandomQuote();
 });
 
-// Storing the container in a variable
-const D = document.querySelector('#container');
 
-//Using query selectors to change text content of HTML elements
- const FirstDiv = document.querySelector('.course');
- FirstDiv.textContent = 'This is the new One Bruh';
- console.log(FirstDiv.textContent); 
-
-  //MODIFYING DOM ELEMENTS
-  // Changing elements properties: 
-  //a. ModifyInnerHTML
-const inner = document.getElementById('course2')
-inner.innerHTML = 'This has been updated bro';
-
-const MOD = document.getElementById('course3')
-console.log(MOD);
-MOD.innerText = "New Inner text"
-
-//Appenchild to Create a nested DOM structure
-const fragment = document.createDocumentFragment();
-const li = fragment
-  .appendChild(document.createElement("section"))
-  .appendChild(document.createElement("ul"))
-  .appendChild(document.createElement("li"));
-li.textContent = "hello world";
-
-document.body.appendChild(fragment);
-
- //Insert Before
- // Create a new, plain <span> element
- let sp1 = document.createElement("span");
-
- // Get the reference element
- let sp2 = document.getElementById("childElement");
- // Get the parent element
- let parentDiv = sp2.parentNode;
-
- // Insert the new element into before sp2
- parentDiv.insertBefore(sp1, sp2);
-
-//Remove child ();
-
-const pickChild = document.getElementById('course4');
-console.log(pickChild);
-
-const takeOff = document.getElementById('catch');
-const removeNow = pickChild.removeChild(takeOff);   
-
-//Session Storage: sessionStorage.setItem("Key", "Value");
-
-// const Stg = document.getElementById('Storage');
-// const sessionStg = document.addEventListener('click', () => {
-//   console.log ('You have clicked me')
-
-
-//    sessionStorage.setItem("userID", "Equere123");
-// });
-
-const showData = document.getElementById('Display');
-const rtv = document.getElementById('getData');
-rtv.addEventListener("click", () => {
-  const p = document.createElement("p")
-  const seeData = sessionStorage.getItem("user");
-  p.textContent = seeData;
-  showData.appendChild(p);
-
-});
-//Local Storage : All we are doing here is change any method from sessionStorage to localStorage
-
-const Stg = document.getElementById('Storage');
-const sessionStg = document.addEventListener('click', () => {
-  console.log ('You have clicked me')
-
-
-   localStorage.setItem("userID", "Equere123");
-});
-
-//JSON: Javascript Object Notation: Converting 
-
-const nameR = ["alfred", "dalal", "enos"];
-console.log (nameR);
-
-console.log(JSON.stringify(nameR));
