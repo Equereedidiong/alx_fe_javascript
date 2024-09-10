@@ -314,7 +314,6 @@ async function postQuoteToServer(quote) {
   return newQuote;
 }
 
-//
 // Periodic data fetching every 30 seconds
 setInterval(async () => {
   const serverQuotes = await fetchQuotesFromServer();
@@ -333,24 +332,7 @@ function syncWithLocalData(serverQuotes) {
   localStorage.setItem('quotes', JSON.stringify(syncedQuotes));
   populateCategories();
   filterQuotes();
-};
-
-//
-
-function syncWithLocalData(serverQuotes) {
-  const localQuotes = getStoredQuotes();
-
-  // Merge quotes with server precedence
-  const syncedQuotes = [...serverQuotes, ...localQuotes.filter(localQuote => 
-    !serverQuotes.some(serverQuote => serverQuote.text === localQuote.text)
-  )];
-
-  // Update local storage with merged data
-  localStorage.setItem('quotes', JSON.stringify(syncedQuotes));
-  populateCategories();
-  filterQuotes();
 }
-
 
 function syncWithLocalData(serverQuotes) {
   const localQuotes = getStoredQuotes();
