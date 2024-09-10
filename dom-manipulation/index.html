@@ -16,17 +16,30 @@
   
   <br>
   <br>
-
+  
   <div>
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
     <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
     <button id="Dynamic"> Add Quote </button>
   </div>
 
+  <div id="showThem"></div>
+
+  <br>
+
   <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
   <br>
   <br>
-   <button > Export Quotes </button>
+  <button id="export-btn"> Export Quotes to JSON </button>
+  <br>
+  <br>
+  <select id="categoryFilter" onchange="filterQuotes()">
+    <option value="all">All Categories</option>
+    <option value="Motivation">Motivation</option>
+    <option value="Sarcasm">Sarcasm</option>
+    <!-- Dynamically populated categories -->
+  </select>
+
   <script src="script.js"></script>
 </body>
 </html>

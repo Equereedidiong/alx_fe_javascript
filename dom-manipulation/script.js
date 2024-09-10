@@ -30,9 +30,12 @@ showRandomQuote = () => {
  // Paragraph.innerText = console.log(randomQuote);
  // const paragraph = document.createElement('p');
  // console.log(ranArray);
+
 };
 
 //Quiz 3: Adding Dynamically:
+let Par = document.createElement('p');
+const showQuote = document.querySelector('#showThem');
 const Btin = document.querySelector('#Dynamic');
 const newQuote = document.getElementById('newQuoteText');
 const newCategory = document.getElementById('newQuoteCategory');
@@ -50,7 +53,9 @@ createAddQuoteForm = () => {
 
   localStorage.setItem('Quotes', (notation));
 
-
+  Par.innerHTML = showQuote.appendChild(Par);
+  Par.innerText = newArray;
+  // showQuote.appendChild(Par);
 
 
 
@@ -76,53 +81,209 @@ showNotes = () => {
   const getArray = localStorage.getItem('Quotes');
   const loggedData = JSON.parse(getArray);
   // newArray.push(...loggedData)
+  console.log (loggedData);
   newArray.push(loggedData);
-
-  
-
-
 }
+
 showNotes(); 
-// PENDING FINISH FOR LOGGING ON THE JSON DATA PARSED.
-// To Export JSON Data
 
-// Function to export quotes as a JSON file
-function exportQuotesToJSON() {
-  // Step 1: Convert the quotes array to a JSON string
-  const jsonString = JSON.stringify(quotes, null, 2); // Pretty-printing with indentation
+const exportJSON = document.getElementById('export-btn');
+// console.log(exportJSON);
 
-  // Step 2: Create a Blob object from the JSON string
-  const blob = new Blob([jsonString], { type: 'application/json' });
 
-  // Step 3: Create a URL for the Blob object
-  const url = URL.createObjectURL(blob);
 
-  // Step 4: Create a temporary link element
+//Quiz 2 Export JSON Data: 
+ExportJson = () => {
+   
+  const convertQuote = JSON.stringify(newArray);
+  console.log(convertQuote);
+
+  //Make a Blob put of the converted JSON quotes;
+  const makeBlob = new Blob ([convertQuote], {type: 'application/json'});
+
+  //Create URL for Blob
+  const url1 = URL.createObjectURL(makeBlob);
+
+  //Creat a temporary Link element;
+
   const a = document.createElement('a');
-  a.href = url;
-  a.download = 'quotes.json'; // Filename for the JSON file
+  a.href = url1;
+  a.download = 'Quotes.json'; //Filename for the Json file
 
-  // Step 5: Append the link to the document, click it, and remove it
+  //Append the Link element you created to the document
+
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+  URL.revokeObjectURL(url1);
+};
 
-  // Step 6: Revoke the URL to free up resources
-  URL.revokeObjectURL(url);
+exportJSON.addEventListener('click', () => {
+ 
+  ExportJson();
+
+});
+
+// // JSON Import
+
+// function importFromJsonFile (event) {
+//   const fileReader = new FileReader();
+//   fileReader.onload = function(event) {
+//     const importedQuotes = JSON.parse(event.target.result);
+//     quotes.push(...importedQuotes);
+//     saveQuotes();
+//     alert('Quotes imported successfully!');
+//   };
+//   fileReader.readAsText(event.target.files[0]);
+// });
+
+//Task 2: Creating a Dynamic Content Filtering System Using Web Storage and JSON
+
+// Array of quote objects
+const quote = [
+  { text: "The only limit to our realization of tomorrow is our doubts of today.", category: "Motivation" },
+  { text: "Life is what happens when you're busy making other plans.", category: "Life" },
+  { text: "The purpose of our lives is to be happy.", category: "Happiness" },
+  { text: "Happiness is not something ready made. It comes from your own actions.", category: "Happiness" },
+  { text: "The way to get started is to quit talking and begin doing.", category: "Motivation" }
+];
+
+// Function to populate categories dynamically
+function populateCategories() {
+  const categoryFilter = document.getElementById('categoryFilter');
+
+  // Extract unique categories from quotes array
+  const uniqueCategories = [...new Set(quotes.map(quote => quote.category))];
+
+  // Populate the dropdown with unique categories
+  uniqueCategories.forEach(category => {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = category;
+    categoryFilter.appendChild(option);
+  });
 }
 
-// Event listener for the export button
-document.getElementById('export-btn').addEventListener('click', exportQuotesToJS
+// Function to filter and display quotes based on selected category
+function filterQuotes() {
+  const selectedCategory = document.getElementById('categoryFilter').value;
+  const quoteDisplay = document.getElementById('quoteDisplay');
 
-// JSON Import
+  // Clear previous quotes
+  quoteDisplay.innerHTML = '';
 
-function importFromJsonFile(event) {
-  const fileReader = new FileReader();
-  fileReader.onload = function(event) {
-    const importedQuotes = JSON.parse(event.target.result);
-    quotes.push(...importedQuotes);
-    saveQuotes();
-    alert('Quotes imported successfully!');
-  };
-  fileReader.readAsText(event.target.files[0]);
+  // Filter quotes based on category
+  const filteredQuotes = selectedCategory === 'all'
+    ? quotes
+    : quotes.filter(quote => quote.category === selectedCategory);
+
+  // Display filtered quotes
+  filteredQuotes.forEach(quote => {
+    const quoteElement = document.createElement('p');
+    quoteElement.textContent = `"${quote.text}" - Category: ${quote.category}`;
+    quoteDisplay.appendChild(quoteElement);
+  });
 }
+
+// Initial population of categories and quotes
+populateCategories();
+filterQuotes();
+
+// Function to get stored quotes or default quotes if none are saved
+function getStoredQuotes() {
+  const storedQuotes = localStorage.getItem('quotes');
+  return storedQuotes ? JSON.parse(storedQuotes) : [
+    { text: "The only limit to our realization of tomorrow is our doubts of today.", category: "Motivation" },
+    { text: "Life is what happens when you're busy making other plans.", category: "Life" },
+    { text: "The purpose of our lives is to be happy.", category: "Happiness" },
+    { text: "Happiness is not something ready made. It comes from your own actions.", category: "Happiness" },
+    { text: "The way to get started is to quit talking and begin doing.", category: "Motivation" }
+  ];
+}
+
+// Array of quote objects
+let quotes = getStoredQuotes();
+
+// Function to persist quotes to local storage
+function saveQuotes() {
+  localStorage.setItem('quotes', JSON.stringify(quotes));
+}
+
+// Function to populate categories dynamically
+function populateCategories() {
+  const categoryFilter = document.getElementById('categoryFilter');
+
+  // Clear existing categories
+  categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+
+  // Extract unique categories from quotes array
+  const uniqueCategories = [...new Set(quotes.map(quote => quote.category))];
+
+  // Populate the dropdown with unique categories
+  uniqueCategories.forEach(category => {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = category;
+    categoryFilter.appendChild(option);
+  });
+}
+
+// Function to filter and display quotes based on selected category
+function filterQuotes() {
+  const selectedCategory = document.getElementById('categoryFilter').value;
+  const quoteDisplay = document.getElementById('quoteDisplay');
+
+  // Clear previous quotes
+  quoteDisplay.innerHTML = '';
+
+  // Filter quotes based on category
+  const filteredQuotes = selectedCategory === 'all'
+    ? quotes
+    : quotes.filter(quote => quote.category === selectedCategory);
+
+  // Display filtered quotes
+  filteredQuotes.forEach(quote => {
+    const quoteElement = document.createElement('p');
+    quoteElement.textContent = `"${quote.text}" - Category: ${quote.category}`;
+    quoteDisplay.appendChild(quoteElement);
+  });
+}
+
+// Function to add a new quote
+function addQuote(text, category) {
+  // Add the new quote to the quotes array
+  quotes.push({ text, category });
+  
+  // Save the updated quotes array to local storage
+  saveQuotes();
+
+  // Update categories in dropdown if a new category is added
+  populateCategories();
+
+  // Refresh the quotes display
+  filterQuotes();
+}
+
+// Function to handle form submission for adding a quote
+function handleAddQuoteForm() {
+  const quoteText = document.getElementById('quoteText').value;
+  const quoteCategory = document.getElementById('quoteCategory').value;
+
+  if (quoteText && quoteCategory) {
+    addQuote(quoteText, quoteCategory);
+
+    // Clear the form fields
+    document.getElementById('quoteText').value = '';
+    document.getElementById('quoteCategory').value = '';
+  }
+}
+
+// Initial population of categories and quotes
+populateCategories();
+filterQuotes();
+
+// Event listener for form submission (assumed that the form elements exist in your HTML)
+document.getElementById('addQuoteForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  handleAddQuoteForm();
+});
