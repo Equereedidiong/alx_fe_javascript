@@ -287,3 +287,96 @@ document.getElementById('addQuoteForm').addEventListener('submit', function(even
   event.preventDefault();
   handleAddQuoteForm();
 });
+
+
+// TASK 3
+
+// Simulate fetching quotes from a server
+async function fetchQuotesFromServer() {
+  const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+  const quotes = await response.json();
+  return quotes.map(quote => ({
+    text: quote.title, // Using post title as quote text
+    category: "Server"
+  }));
+}
+
+// Simulate posting new quotes to the server
+async function postQuoteToServer(quote) {
+  const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+    method: 'POST',
+    body: JSON.stringify(quote),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  });
+  const newQuote = await response.json();
+  return newQuote;
+}
+
+//
+// Periodic data fetching every 30 seconds
+setInterval(async () => {
+  const serverQuotes = await fetchQuotesFromServer();
+  syncWithLocalData(serverQuotes);
+}, 30000); // Fetch every 30 seconds
+
+function syncWithLocalData(serverQuotes) {
+  const localQuotes = getStoredQuotes();
+
+  // Merge quotes with server precedence
+  const syncedQuotes = [...serverQuotes, ...localQuotes.filter(localQuote => 
+    !serverQuotes.some(serverQuote => serverQuote.text === localQuote.text)
+  )];
+
+  // Update local storage with merged data
+  localStorage.setItem('quotes', JSON.stringify(syncedQuotes));
+  populateCategories();
+  filterQuotes();
+};
+
+//
+
+function syncWithLocalData(serverQuotes) {
+  const localQuotes = getStoredQuotes();
+
+  // Merge quotes with server precedence
+  const syncedQuotes = [...serverQuotes, ...localQuotes.filter(localQuote => 
+    !serverQuotes.some(serverQuote => serverQuote.text === localQuote.text)
+  )];
+
+  // Update local storage with merged data
+  localStorage.setItem('quotes', JSON.stringify(syncedQuotes));
+  populateCategories();
+  filterQuotes();
+}
+
+
+function syncWithLocalData(serverQuotes) {
+  const localQuotes = getStoredQuotes();
+  let conflictsResolved = false;
+
+  // Check for conflicts
+  const syncedQuotes = serverQuotes.map(serverQuote => {
+    const conflictingQuote = localQuotes.find(localQuote => localQuote.text === serverQuote.text);
+    if (conflictingQuote) {
+      conflictsResolved = true;
+    }
+    return serverQuote;
+  });
+
+  // Merge non-conflicting local quotes
+  const mergedQuotes = [...syncedQuotes, ...localQuotes.filter(localQuote => 
+    !serverQuotes.some(serverQuote => serverQuote.text === localQuote.text)
+  )];
+
+  // Update local storage
+  localStorage.setItem('quotes', JSON.stringify(mergedQuotes));
+  populateCategories();
+  filterQuotes();
+
+  // Notify user if conflicts were resolved
+  if (conflictsResolved) {
+    alert("Conflicts resolved using server data.");
+  }
+}
